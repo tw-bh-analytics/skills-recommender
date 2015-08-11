@@ -4,6 +4,7 @@ target/
 .project
 .classpath
 .settings
+src/main/resources/*.csv
 
 # Package Files #
 *.jar
