@@ -1,4 +1,4 @@
-package br.com.flsusp.mahout_example.recommendation;
+package br.com.tw.bh.analytics.recommendation;
 
 import java.io.File;
 import java.io.FileReader;
