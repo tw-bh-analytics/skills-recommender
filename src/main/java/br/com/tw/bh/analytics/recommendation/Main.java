@@ -13,7 +13,7 @@ public class Main {
 				new File(SkillRecommender.class.getClassLoader().getResource("skills.csv").getPath()));
 		SkillRecommender recommender = new SkillRecommender(
 				new File(SkillRecommender.class.getClassLoader().getResource("skill-ratings.csv").getPath()), skills);
-		List<String> recommendedSkills = recommender.recommendSkillsForUser(17558); // TODO: Put your user ID here
+		List<Skill> recommendedSkills = recommender.recommendSkillsForUser(16902); // TODO: Put your user ID here
 		System.out.println(recommendedSkills);
 	}
 }

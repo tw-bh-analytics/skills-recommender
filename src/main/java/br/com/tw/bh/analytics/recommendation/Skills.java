@@ -10,25 +10,26 @@ import org.apache.commons.csv.CSVParser;
 
 public class Skills {
 
-	private final Map<Long, String> skillNamesById;
+	private final Map<Long, Skill> skillsById;
 
 	public Skills(File skillsFile) {
 		try {
-			this.skillNamesById = loadSkills(new CSVParser(new FileReader(skillsFile)));
+			this.skillsById = loadSkills(new CSVParser(new FileReader(skillsFile)));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	private Map<Long, String> loadSkills(CSVParser parser) throws IOException {
-		Map<Long, String> result = new HashMap<>();
+	private Map<Long, Skill> loadSkills(CSVParser parser) throws IOException {
+		Map<Long, Skill> result = new HashMap<>();
 		for (String[] line : parser.getAllValues()) {
-			result.put(Long.valueOf(line[1]), line[0]);
+			long id = Long.valueOf(line[1]);
+			result.put(id, new Skill(id, line[0]));
 		}
 		return result;
 	}
 
-	public String getNameFor(long skillId) {
-		return skillNamesById.get(skillId);
+	public Skill get(long skillId) {
+		return skillsById.get(skillId);
 	}
 }
