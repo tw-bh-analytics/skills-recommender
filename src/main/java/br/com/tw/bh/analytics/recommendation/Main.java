@@ -9,11 +9,11 @@ import org.apache.mahout.cf.taste.common.TasteException;
 public class Main {
 
 	public static void main(String[] args) throws IOException, TasteException {
-		Skills skills = new Skills(
-				new File(SkillRecommender.class.getClassLoader().getResource("skills.csv").getPath()));
+		Skills skills = new Skills(new File(Main.class.getClassLoader().getResource("skills.csv").getPath()));
+		People people = new People(new File(Main.class.getClassLoader().getResource("people.csv").getPath()));
 		SkillRecommender recommender = new SkillRecommender(
-				new File(SkillRecommender.class.getClassLoader().getResource("skill-ratings.csv").getPath()), skills);
-		List<Skill> recommendedSkills = recommender.recommendSkillsForUser(16902); // TODO: Put your user ID here
+				new File(Main.class.getClassLoader().getResource("skill-ratings.csv").getPath()), skills, people);
+		List<Skill> recommendedSkills = recommender.recommendSkillsFor(16902); // TODO: Put your user ID here
 		System.out.println(recommendedSkills);
 	}
 }

@@ -35,7 +35,7 @@ public class PersonSkillSetSimilarityRecommender {
 		recommender = new GenericUserBasedRecommender(model, neighborhood, similarity);
 	}
 
-	public List<Skill> recommendSkillsForUser(int userId, int numberOfRecommendations) throws TasteException {
+	public List<Skill> recommendSkillsFor(int userId, int numberOfRecommendations) throws TasteException {
 		List<RecommendedItem> recommendations = recommender.recommend(userId, numberOfRecommendations,
 				new IgnoreUnderRatedRecommendationsRescorer(model, userId), true);
 		List<Skill> skillsToRecommend = new ArrayList<>();

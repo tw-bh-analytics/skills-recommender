@@ -10,11 +10,11 @@ public class SkillRecommender {
 
 	private PersonSkillSetSimilarityRecommender personSkillSetSimilarityRecommender;
 
-	public SkillRecommender(File ratings, Skills skills) throws IOException, TasteException {
+	public SkillRecommender(File ratings, Skills skills, People people) throws IOException, TasteException {
 		this.personSkillSetSimilarityRecommender = new PersonSkillSetSimilarityRecommender(ratings, skills);
 	}
 
-	public List<Skill> recommendSkillsForUser(int userId) throws TasteException {
-		return personSkillSetSimilarityRecommender.recommendSkillsForUser(userId, 5);
+	public List<Skill> recommendSkillsFor(int personId) throws TasteException {
+		return personSkillSetSimilarityRecommender.recommendSkillsFor(personId, 5);
 	}
 }
