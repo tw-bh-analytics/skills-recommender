@@ -10,6 +10,10 @@ public class Skill {
 		this.name = name;
 	}
 
+	public long getId() {
+		return id;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

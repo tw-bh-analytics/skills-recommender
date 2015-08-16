@@ -10,7 +10,8 @@ public class SkillRecommender {
 
 	private PersonSkillSetSimilarityRecommender personSkillSetSimilarityRecommender;
 
-	public SkillRecommender(File ratings, Skills skills, People people) throws IOException, TasteException {
+	public SkillRecommender(File ratingsFile, Skills skills, People people) throws IOException, TasteException {
+		SkillRatings ratings = new SkillRatings(ratingsFile, skills, people);
 		this.personSkillSetSimilarityRecommender = new PersonSkillSetSimilarityRecommender(ratings, skills);
 	}
 
