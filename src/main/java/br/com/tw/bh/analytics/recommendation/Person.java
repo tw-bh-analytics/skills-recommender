@@ -34,4 +34,8 @@ public class Person {
 	public String toString() {
 		return "Person [id=" + id + ", name=" + name + ", role=" + role + ", grade=" + grade + "]";
 	}
+
+	public boolean hasRole(String role) {
+		return this.role.equals(role);
+	}
 }

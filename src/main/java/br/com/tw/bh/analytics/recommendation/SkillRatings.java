@@ -5,10 +5,13 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.csv.CSVParser;
+import org.apache.mahout.cf.taste.impl.common.FastByIDMap;
+import org.apache.mahout.cf.taste.impl.model.GenericDataModel;
 import org.apache.mahout.cf.taste.impl.model.file.FileDataModel;
 import org.apache.mahout.cf.taste.model.DataModel;
 
@@ -31,7 +34,15 @@ public class SkillRatings {
 		}
 	}
 
+	private SkillRatings(Map<Person, Map<Skill, Integer>> ratings) {
+		this.ratings.putAll(ratings);
+	}
+	
 	public DataModel getDataModel() {
+		if (ratings.isEmpty()) {
+			return new GenericDataModel(new FastByIDMap<>());
+		}
+
 		try {
 			File tmpDataModel = File.createTempFile("skill-recommender", "data-model");
 			writeRatingsTo(tmpDataModel);
@@ -51,5 +62,18 @@ public class SkillRatings {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public SkillRatings filterByRole(String role) {
+		Map<Person, Map<Skill, Integer>> filteredRatings = new HashMap<>();
+		filteredRatings.putAll(ratings);
+		Iterator<Person> iterator = filteredRatings.keySet().iterator();
+		while (iterator.hasNext()) {
+			Person person = iterator.next();
+			if (!person.hasRole(role)) {
+				iterator.remove();
+			}
+		}
+		return new SkillRatings(filteredRatings);
 	}
 }

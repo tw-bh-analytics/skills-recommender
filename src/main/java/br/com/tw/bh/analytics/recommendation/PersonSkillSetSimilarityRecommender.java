@@ -1,6 +1,5 @@
 package br.com.tw.bh.analytics.recommendation;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,13 +23,17 @@ public class PersonSkillSetSimilarityRecommender {
 	private final UserBasedRecommender recommender;
 	private final Skills skills;
 
-	public PersonSkillSetSimilarityRecommender(SkillRatings ratings, Skills skills) throws IOException, TasteException {
+	public PersonSkillSetSimilarityRecommender(SkillRatings ratings, Skills skills) {
 		this.model = ratings.getDataModel();
 		this.skills = skills;
 
-		UserSimilarity similarity = new PearsonCorrelationSimilarity(model);
-		UserNeighborhood neighborhood = new ThresholdUserNeighborhood(NEIGHBORHOOD_THRESHOLD, similarity, model);
-		recommender = new GenericUserBasedRecommender(model, neighborhood, similarity);
+		try {
+			UserSimilarity similarity = new PearsonCorrelationSimilarity(model);
+			UserNeighborhood neighborhood = new ThresholdUserNeighborhood(NEIGHBORHOOD_THRESHOLD, similarity, model);
+			recommender = new GenericUserBasedRecommender(model, neighborhood, similarity);
+		} catch (TasteException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public List<Skill> recommendSkillsFor(int userId, int numberOfRecommendations) throws TasteException {
