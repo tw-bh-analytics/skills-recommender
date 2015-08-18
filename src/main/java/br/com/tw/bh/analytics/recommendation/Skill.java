@@ -1,6 +1,6 @@
 package br.com.tw.bh.analytics.recommendation;
 
-public class Skill {
+public class Skill implements Comparable<Skill> {
 
 	private final long id;
 	private final String name;
@@ -39,5 +39,10 @@ public class Skill {
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	@Override
+	public int compareTo(Skill o) {
+		return this.name.compareToIgnoreCase(o.name);
 	}
 }

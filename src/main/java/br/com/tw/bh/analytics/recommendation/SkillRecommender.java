@@ -10,18 +10,24 @@ import org.apache.mahout.cf.taste.common.TasteException;
 
 public class SkillRecommender {
 
-	private final Map<String, PersonSkillSetSimilarityRecommender> recommendersByRole = new HashMap<>();
+	private final Map<String, PersonSkillSetSimilarityRecommender> similarityRecommendersByRole = new HashMap<>();
+	private final Map<String, GradeRecommender> gradeRecommendersByRole = new HashMap<>();
 	private final People people;
 
 	public SkillRecommender(File ratingsFile, Skills skills, People people) throws IOException, TasteException {
 		this.people = people;
 		SkillRatings ratings = new SkillRatings(ratingsFile, skills, people);
-		people.forEachRole(role -> recommendersByRole.put(role,
+		people.forEachRole(role -> similarityRecommendersByRole.put(role,
 				new PersonSkillSetSimilarityRecommender(ratings.filterByRole(role), skills)));
+		people.forEachRole(role -> gradeRecommendersByRole.put(role,
+				new GradeRecommender(people, ratings.filterByRole(role), skills)));
 	}
 
 	public List<Skill> recommendSkillsFor(int personId) throws TasteException {
 		Person person = people.get(personId);
-		return recommendersByRole.get(person.getRole()).recommendSkillsFor(personId, 5);
+		List<Skill> recommendations = similarityRecommendersByRole.get(person.getRole()).recommendSkillsFor(personId,
+				5);
+		recommendations.addAll(gradeRecommendersByRole.get(person.getRole()).recommendSkillsFor(personId, 3));
+		return recommendations;
 	}
 }

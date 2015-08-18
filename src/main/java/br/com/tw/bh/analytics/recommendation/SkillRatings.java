@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Map.Entry;
+import java.util.function.Consumer;
 
 import org.apache.commons.csv.CSVParser;
 import org.apache.mahout.cf.taste.impl.common.FastByIDMap;
@@ -75,5 +77,16 @@ public class SkillRatings {
 			}
 		}
 		return new SkillRatings(filteredRatings);
+	}
+
+	public void forEachPerson(Consumer<Person> action) {
+		Objects.requireNonNull(action);
+		for (Person person : ratings.keySet()) {
+			action.accept(person);
+		}
+	}
+
+	public Map<Skill, Integer> getRatingFor(Person person) {
+		return ratings.get(person);
 	}
 }
