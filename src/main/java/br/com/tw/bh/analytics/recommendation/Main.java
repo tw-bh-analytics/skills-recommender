@@ -12,7 +12,7 @@ public class Main {
 		Skills skills = new Skills(new File(Main.class.getClassLoader().getResource("skills.csv").getPath()));
 		People people = new People(new File(Main.class.getClassLoader().getResource("people.csv").getPath()));
 		SkillRecommender recommender = new SkillRecommender(
-				new File(Main.class.getClassLoader().getResource("skill-ratings.csv").getPath()), skills, people);
+				new File(Main.class.getClassLoader().getResource("skill_ratings.csv").getPath()), skills, people);
 		List<Skill> recommendedSkills = recommender.recommendSkillsFor(16591); // TODO: Put your user ID here
 		System.out.println(recommendedSkills);
 	}

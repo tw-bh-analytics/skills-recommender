@@ -18,7 +18,7 @@ import org.apache.mahout.cf.taste.similarity.UserSimilarity;
 
 public class PersonSkillSetSimilarityRecommender {
 
-	private static final double NEIGHBORHOOD_THRESHOLD = 0.5;
+	private static final double NEIGHBORHOOD_THRESHOLD = 0.2;
 	private final DataModel model;
 	private final UserBasedRecommender recommender;
 	private final Skills skills;
