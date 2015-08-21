@@ -32,10 +32,14 @@ public class Person {
 
 	@Override
 	public String toString() {
-		return "Person [id=" + id + ", name=" + name + ", role=" + role + ", grade=" + grade + "]";
+		return name;
 	}
 
 	public boolean hasRole(String role) {
 		return this.role.equals(role);
+	}
+
+	public boolean matchName(String name) {
+		return this.name.toLowerCase().startsWith(name.toLowerCase());
 	}
 }

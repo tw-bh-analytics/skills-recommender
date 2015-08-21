@@ -3,12 +3,14 @@ package br.com.tw.bh.analytics.recommendation;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import org.apache.commons.csv.CSVParser;
 
@@ -43,5 +45,9 @@ public class People {
 		for (String role : roles) {
 			action.accept(role);
 		}
+	}
+
+	public Collection<Person> findWithName(String name) {
+		return peopleById.values().stream().filter(person -> person.matchName(name)).collect(Collectors.toList());
 	}
 }
