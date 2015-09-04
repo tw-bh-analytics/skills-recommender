@@ -1,10 +1,10 @@
 package br.com.tw.bh.analytics.recommendation;
 
-import com.jolbox.bonecp.BoneCP;
+import javax.sql.DataSource;
 
 public class FeedbackHandler {
 
-	public FeedbackHandler(People people, Skills skills, BoneCP connectionPool) {
+	public FeedbackHandler(People people, Skills skills, DataSource dataSource) {
 		// TODO Auto-generated constructor stub
 	}
 

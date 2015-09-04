@@ -5,6 +5,7 @@ target/
 .classpath
 .settings
 src/main/resources/*.csv
+data
 
 # Package Files #
 *.jar
@@ -13,3 +14,5 @@ src/main/resources/*.csv
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+jdbc:*

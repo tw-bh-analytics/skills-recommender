@@ -9,18 +9,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.mahout.cf.taste.common.TasteException;
+import javax.sql.DataSource;
 
-import com.jolbox.bonecp.BoneCP;
+import org.apache.mahout.cf.taste.common.TasteException;
 
 public class SkillRecommender {
 
 	private final Map<String, PersonSkillSetSimilarityRecommender> similarityRecommendersByRole = new HashMap<>();
 	private final Map<String, GradeRecommender> gradeRecommendersByRole = new HashMap<>();
 	private final People people;
-	private final BoneCP connectionPool;
+	private final DataSource connectionPool;
 
-	public SkillRecommender(Reader ratingsReader, Skills skills, People people, BoneCP connectionPool)
+	public SkillRecommender(Reader ratingsReader, Skills skills, People people, DataSource connectionPool)
 			throws IOException, TasteException {
 		this.people = people;
 		this.connectionPool = connectionPool;

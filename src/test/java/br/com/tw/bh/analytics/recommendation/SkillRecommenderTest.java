@@ -1,35 +1,31 @@
 package br.com.tw.bh.analytics.recommendation;
 
-import static org.junit.Assert.*;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.sql.SQLException;
+
+import javax.sql.DataSource;
 
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.hsqldb.Server;
+import org.hsqldb.jdbc.JDBCDataSource;
 import org.hsqldb.persist.HsqlProperties;
 import org.hsqldb.server.ServerAcl.AclFormatException;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-
-import com.jolbox.bonecp.BoneCP;
-import com.jolbox.bonecp.BoneCPConfig;
 
 public class SkillRecommenderTest {
 
 	private Server database;
-	private BoneCP boneCP;
+	private DataSource dataSource;
 
 	@Before
 	public void spinUpDataSource() {
 		try {
 			HsqlProperties props = new HsqlProperties();
-			props.setProperty("server.database.0", "jdbc:hsqldb:mem:recommendationdb");
+			props.setProperty("server.database.0", "jdbc:hsqldb:mem");
 			props.setProperty("server.dbname.0", "recommendationdb");
 			database = new org.hsqldb.Server();
 			database.setProperties(props);
@@ -44,29 +40,23 @@ public class SkillRecommenderTest {
 			throw new RuntimeException(e);
 		}
 
-		try {
-			BoneCPConfig config = new BoneCPConfig();
-			config.setJdbcUrl("jdbc:hsqldb:mem:recommendationdb");
-			config.setMinConnectionsPerPartition(3);
-			config.setMaxConnectionsPerPartition(10);
-			config.setPartitionCount(1);
-			boneCP = new BoneCP(config);
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
+		JDBCDataSource hsqldbDataSource = new JDBCDataSource();
+		hsqldbDataSource.setURL("jdbc:hsqldb:mem:recommendation");
+		dataSource = hsqldbDataSource;
 	}
 
 	@After
 	public void shutdownDataSource() {
-		boneCP.shutdown();
 		database.shutdown();
 	}
-	
+
 	@Test
 	public void testValidRecommendation() throws IOException, TasteException {
 		Skills skills = new Skills(loadReaderFor("skills.csv"));
 		People people = new People(loadReaderFor("people.csv"));
-		SkillRecommender recommender = new SkillRecommender(loadReaderFor("skill_ratings.csv"), skills, people, boneCP);
+		SkillRecommender recommender = new SkillRecommender(loadReaderFor("skill_ratings.csv"), skills, people,
+				dataSource);
+		System.out.println(recommender.recommendSkillsFor(1));
 	}
 
 	private Reader loadReaderFor(String file) {
