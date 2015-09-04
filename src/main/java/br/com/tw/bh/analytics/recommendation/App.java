@@ -1,15 +1,19 @@
 package br.com.tw.bh.analytics.recommendation;
 
 import static spark.Spark.get;
+import static spark.Spark.post;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
 import org.apache.mahout.cf.taste.common.TasteException;
 
 import com.google.gson.Gson;
+import com.jolbox.bonecp.BoneCP;
+import com.jolbox.bonecp.BoneCPConfig;
 
 public class App {
 
@@ -20,7 +24,10 @@ public class App {
 
 		final Skills skills = new Skills(loadFile("skills.csv"));
 		final People people = new People(loadFile("people.csv"));
-		final SkillRecommender recommender = new SkillRecommender(loadFile("skill_ratings.csv"), skills, people);
+		final BoneCP connectionPool = loadConnectionPool();
+		final SkillRecommender recommender = new SkillRecommender(loadFile("skill_ratings.csv"), skills, people,
+				connectionPool);
+		final FeedbackHandler feedbackHandler = new FeedbackHandler(people, skills, connectionPool);
 
 		Gson gson = new Gson();
 
@@ -41,6 +48,46 @@ public class App {
 			List<Skill> recommendedSkills = recommender.recommendSkillsFor(id);
 			return gson.toJsonTree(recommendedSkills);
 		});
+
+		get("/person/:id/recommendation/:skillId/evaluation", (req, res) -> {
+			int id = Integer.valueOf(req.params(":id"));
+			int skillId = Integer.valueOf(req.params(":skillId"));
+
+			boolean like = feedbackHandler.getFeedback(id, skillId);
+
+			return gson.toJson(like);
+		});
+
+		post("/person/:id/recommendation/:skillId/evaluation", (req, res) -> {
+			int id = Integer.valueOf(req.params(":id"));
+			int skillId = Integer.valueOf(req.params(":skillId"));
+			boolean like = Boolean.valueOf(req.queryParams("like"));
+
+			feedbackHandler.registerFeedback(id, skillId, like);
+
+			return "";
+		});
+	}
+
+	private static BoneCP loadConnectionPool() {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+
+		try {
+			BoneCPConfig config = new BoneCPConfig();
+			config.setJdbcUrl("jdbc:mysql://localhost/test");
+			config.setUsername("app");
+			config.setPassword("ApP!");
+			config.setMinConnectionsPerPartition(3);
+			config.setMaxConnectionsPerPartition(10);
+			config.setPartitionCount(1);
+			return new BoneCP(config);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private static File loadFile(String name) {
