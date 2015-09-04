@@ -16,6 +16,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import br.com.tw.bh.analytics.recommendation.utils.DatabaseUtils;
+
 public class SkillRecommenderTest {
 
 	private Server database;
@@ -43,6 +45,7 @@ public class SkillRecommenderTest {
 		JDBCDataSource hsqldbDataSource = new JDBCDataSource();
 		hsqldbDataSource.setURL("jdbc:hsqldb:mem:recommendation");
 		dataSource = hsqldbDataSource;
+		DatabaseUtils.createTablesIfNotPresent(dataSource);
 	}
 
 	@After
