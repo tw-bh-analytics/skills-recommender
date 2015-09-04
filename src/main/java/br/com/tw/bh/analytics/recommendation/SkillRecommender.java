@@ -1,7 +1,7 @@
 package br.com.tw.bh.analytics.recommendation;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.Reader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -20,11 +20,11 @@ public class SkillRecommender {
 	private final People people;
 	private final BoneCP connectionPool;
 
-	public SkillRecommender(File ratingsFile, Skills skills, People people, BoneCP connectionPool)
+	public SkillRecommender(Reader ratingsReader, Skills skills, People people, BoneCP connectionPool)
 			throws IOException, TasteException {
 		this.people = people;
 		this.connectionPool = connectionPool;
-		SkillRatings ratings = new SkillRatings(ratingsFile, skills, people);
+		SkillRatings ratings = new SkillRatings(ratingsReader, skills, people);
 		people.forEachRole(role -> similarityRecommendersByRole.put(role,
 				new PersonSkillSetSimilarityRecommender(ratings.filterByRole(role), skills)));
 		people.forEachRole(role -> gradeRecommendersByRole.put(role,

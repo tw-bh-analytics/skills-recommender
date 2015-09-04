@@ -1,8 +1,7 @@
 package br.com.tw.bh.analytics.recommendation;
 
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,9 +18,9 @@ public class People {
 	private final Map<Long, Person> peopleById = new HashMap<>();
 	private final Set<String> roles = new HashSet<>();
 
-	public People(File peopleFile) {
+	public People(Reader peopleReader) {
 		try {
-			loadPeople(new CSVParser(new FileReader(peopleFile)));
+			loadPeople(new CSVParser(peopleReader));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

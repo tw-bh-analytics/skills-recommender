@@ -1,14 +1,14 @@
 package br.com.tw.bh.analytics.recommendation;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import org.apache.commons.csv.CSVParser;
@@ -21,9 +21,9 @@ public class SkillRatings {
 
 	private final Map<Person, Map<Skill, Integer>> ratings = new HashMap<>();
 
-	public SkillRatings(File skillRatingsFile, Skills skills, People people) {
+	public SkillRatings(Reader skillRatingsReader, Skills skills, People people) {
 		try {
-			for (String[] line : new CSVParser(new FileReader(skillRatingsFile)).getAllValues()) {
+			for (String[] line : new CSVParser(skillRatingsReader).getAllValues()) {
 				Person person = people.get(Long.valueOf(line[0]));
 				Skill skill = skills.get(Long.valueOf(line[1]));
 				int rating = Integer.valueOf(line[2]);

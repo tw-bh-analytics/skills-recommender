@@ -4,6 +4,7 @@ import static spark.Spark.get;
 import static spark.Spark.post;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -22,11 +23,11 @@ public class App {
 	public static void main(String[] args) throws IOException, TasteException {
 		loadFileLocation(args);
 
-		final Skills skills = new Skills(loadFile("skills.csv"));
-		final People people = new People(loadFile("people.csv"));
+		final Skills skills = new Skills(new FileReader(loadFile("skills.csv")));
+		final People people = new People(new FileReader(loadFile("people.csv")));
 		final BoneCP connectionPool = loadConnectionPool();
-		final SkillRecommender recommender = new SkillRecommender(loadFile("skill_ratings.csv"), skills, people,
-				connectionPool);
+		final SkillRecommender recommender = new SkillRecommender(new FileReader(loadFile("skill_ratings.csv")), skills,
+				people, connectionPool);
 		final FeedbackHandler feedbackHandler = new FeedbackHandler(people, skills, connectionPool);
 
 		Gson gson = new Gson();

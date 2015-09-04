@@ -1,8 +1,7 @@
 package br.com.tw.bh.analytics.recommendation;
 
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,9 +11,9 @@ public class Skills {
 
 	private final Map<Long, Skill> skillsById;
 
-	public Skills(File skillsFile) {
+	public Skills(Reader skillsReader) {
 		try {
-			this.skillsById = loadSkills(new CSVParser(new FileReader(skillsFile)));
+			this.skillsById = loadSkills(new CSVParser(skillsReader));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
