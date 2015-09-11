@@ -59,6 +59,10 @@ class IgnoreUnderRatedRecommendationsRescorer implements IDRescorer {
 		}
 	}
 
+	public IgnoreUnderRatedRecommendationsRescorer() {
+		ratingBySkillForUser = new HashMap<>();
+	}
+
 	@Override
 	public double rescore(long skillId, double rating) {
 		if (ratingBySkillForUser.containsKey(skillId)) {
@@ -72,5 +76,10 @@ class IgnoreUnderRatedRecommendationsRescorer implements IDRescorer {
 	@Override
 	public boolean isFiltered(long rating) {
 		return rating < 2;
+	}
+
+	public IgnoreUnderRatedRecommendationsRescorer withSkillRating(long skillId, float rating) {
+		this.ratingBySkillForUser.put(skillId, rating);
+		return this;
 	}
 }
