@@ -1,11 +1,15 @@
 package br.com.tw.bh.analytics.recommendation;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
 import javax.sql.DataSource;
 
 import org.hsqldb.Server;
 import org.hsqldb.jdbc.JDBCDataSource;
+import org.hsqldb.lib.FileUtil;
 import org.hsqldb.persist.HsqlProperties;
 import org.hsqldb.server.ServerAcl.AclFormatException;
 import org.junit.After;
@@ -19,7 +23,7 @@ public class AbstractTest {
 	private DataSource dataSource;
 
 	@Before
-	public final void spinUpDataSource() {
+	public final void spinUpDataSource() throws IOException {
 		try {
 			HsqlProperties props = new HsqlProperties();
 			props.setProperty("server.database.0", "jdbc:hsqldb:mem");
@@ -37,6 +41,8 @@ public class AbstractTest {
 			throw new RuntimeException(e);
 		}
 
+		FileUtil.deleteOrRenameDatabaseFiles("jdbc:hsqldb:mem:recommendation");
+
 		JDBCDataSource hsqldbDataSource = new JDBCDataSource();
 		hsqldbDataSource.setURL("jdbc:hsqldb:mem:recommendation");
 		dataSource = hsqldbDataSource;
@@ -48,7 +54,12 @@ public class AbstractTest {
 		database.shutdown();
 	}
 
-	public DataSource getDataSource() {
+	protected DataSource getDataSource() {
 		return dataSource;
+	}
+
+	protected Reader loadReaderFor(String file) {
+		InputStream s = SkillRecommenderTest.class.getClassLoader().getResourceAsStream(file);
+		return new InputStreamReader(s);
 	}
 }

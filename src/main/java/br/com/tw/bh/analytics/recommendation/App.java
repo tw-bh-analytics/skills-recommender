@@ -29,7 +29,7 @@ public class App {
 		final DataSource dataSource = loadDataSource();
 		final SkillRecommender recommender = new SkillRecommender(new FileReader(loadFile("skill_ratings.csv")), skills,
 				people, dataSource);
-		final FeedbackHandler feedbackHandler = new FeedbackHandler(people, skills, dataSource);
+		final FeedbackHandler feedbackHandler = new FeedbackHandler(dataSource);
 
 		Gson gson = new Gson();
 

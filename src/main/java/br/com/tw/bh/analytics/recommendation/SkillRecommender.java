@@ -68,7 +68,7 @@ public class SkillRecommender {
 		try (Connection connection = connectionPool.getConnection()) {
 			for (int i = 0; i < recommendations.size(); i++) {
 				PreparedStatement stmt = connection
-						.prepareStatement("INSERT INTO recommendation (person_id, index, skill_id) VALUES (?, ?, ?)");
+						.prepareStatement("INSERT INTO recommendation (person_id, index, skill_id, feedback) VALUES (?, ?, ?, null)");
 				stmt.setInt(1, personId);
 				stmt.setInt(2, i);
 				stmt.setLong(3, recommendations.get(i).getId());
