@@ -79,7 +79,7 @@ public class App {
 		}
 
 		BoneCPConfig config = new BoneCPConfig();
-		config.setJdbcUrl("jdbc:mysql://localhost/test");
+		config.setJdbcUrl("jdbc:mysql://localhost/mysql");
 		config.setUsername("app");
 		config.setPassword("ApP!");
 		config.setMinConnectionsPerPartition(3);

@@ -49,7 +49,7 @@ public class SkillRecommender {
 	private List<Skill> load(int personId) {
 		try (Connection connection = connectionPool.getConnection()) {
 			PreparedStatement stmt = connection
-					.prepareStatement("SELECT skill_id FROM recommendation WHERE person_id = ? ORDER BY index");
+					.prepareStatement("SELECT skill_id FROM recommendation WHERE person_id = ? ORDER BY index_");
 			stmt.setInt(1, personId);
 			ResultSet rs = stmt.executeQuery();
 
@@ -68,7 +68,7 @@ public class SkillRecommender {
 		try (Connection connection = connectionPool.getConnection()) {
 			for (int i = 0; i < recommendations.size(); i++) {
 				PreparedStatement stmt = connection
-						.prepareStatement("INSERT INTO recommendation (person_id, index, skill_id, feedback) VALUES (?, ?, ?, null)");
+						.prepareStatement("INSERT INTO recommendation (person_id, index_, skill_id, feedback) VALUES (?, ?, ?, null)");
 				stmt.setInt(1, personId);
 				stmt.setInt(2, i);
 				stmt.setLong(3, recommendations.get(i).getId());
