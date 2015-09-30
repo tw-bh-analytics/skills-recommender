@@ -69,7 +69,7 @@ public class SkillRecommender {
 				SkillFeedback skill = new SkillFeedback(skills.get(skillId));
 				String feedback = rs.getString(2);
 				if (feedback != null)
-					skill.setFeedback(Boolean.valueOf(feedback));
+					skill.setFeedback("0".equals(feedback));
 				recommendations.add(skill);
 			}
 			return recommendations;
