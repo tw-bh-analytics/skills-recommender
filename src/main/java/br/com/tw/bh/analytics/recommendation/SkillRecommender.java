@@ -49,14 +49,18 @@ public class SkillRecommender {
 	private List<Skill> load(int personId) {
 		try (Connection connection = connectionPool.getConnection()) {
 			PreparedStatement stmt = connection
-					.prepareStatement("SELECT skill_id FROM recommendation WHERE person_id = ? ORDER BY index_");
+					.prepareStatement("SELECT skill_id, feedback FROM recommendation WHERE person_id = ? ORDER BY index_");
 			stmt.setInt(1, personId);
 			ResultSet rs = stmt.executeQuery();
 
 			List<Skill> recommendations = new ArrayList<>();
 			while (rs.next()) {
 				long skillId = rs.getLong(1);
-				recommendations.add(skills.get(skillId));
+				Skill skill = skills.get(skillId);
+				String feedback = rs.getString(2);
+				if (feedback != null)
+					skill.setFeedback(Boolean.valueOf(feedback));
+				recommendations.add(skill);
 			}
 			return recommendations;
 		} catch (SQLException e) {

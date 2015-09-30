@@ -4,6 +4,7 @@ public class Skill implements Comparable<Skill> {
 
 	private final long id;
 	private final String name;
+	private Boolean feedback;
 
 	public Skill(long id, String name) {
 		this.id = id;
@@ -12,6 +13,10 @@ public class Skill implements Comparable<Skill> {
 
 	public long getId() {
 		return id;
+	}
+
+	public Boolean getFeedback() {
+		return feedback;
 	}
 
 	@Override
@@ -44,5 +49,9 @@ public class Skill implements Comparable<Skill> {
 	@Override
 	public int compareTo(Skill o) {
 		return this.name.compareToIgnoreCase(o.name);
+	}
+
+	public void setFeedback(Boolean feedback) {
+		this.feedback = feedback;
 	}
 }

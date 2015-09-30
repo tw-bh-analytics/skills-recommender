@@ -1,7 +1,7 @@
 package br.com.tw.bh.analytics.recommendation;
 
 import static spark.Spark.get;
-import static spark.Spark.post;
+import static spark.Spark.put;
 
 import java.io.File;
 import java.io.FileReader;
@@ -51,21 +51,12 @@ public class App {
 			return gson.toJsonTree(recommendedSkills);
 		});
 
-		get("/person/:id/recommendation/:skillId/evaluation", (req, res) -> {
+		put("/person/:id/recommendation/:skillId", (req, res) -> {
 			int id = Integer.valueOf(req.params(":id"));
 			int skillId = Integer.valueOf(req.params(":skillId"));
+			boolean feedback = Boolean.valueOf(req.queryParams("feedback"));
 
-			boolean like = feedbackHandler.getFeedback(id, skillId);
-
-			return gson.toJson(like);
-		});
-
-		post("/person/:id/recommendation/:skillId/evaluation", (req, res) -> {
-			int id = Integer.valueOf(req.params(":id"));
-			int skillId = Integer.valueOf(req.params(":skillId"));
-			boolean like = Boolean.valueOf(req.queryParams("like"));
-
-			feedbackHandler.registerFeedback(id, skillId, like);
+			feedbackHandler.registerFeedback(id, skillId, feedback);
 
 			return "";
 		});
