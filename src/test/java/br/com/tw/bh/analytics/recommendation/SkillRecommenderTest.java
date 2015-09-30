@@ -16,7 +16,7 @@ public class SkillRecommenderTest extends AbstractTest {
 		People people = new People(loadReaderFor("people.csv"));
 		SkillRecommender recommender = new SkillRecommender(loadReaderFor("skill_ratings.csv"), skills, people,
 				getDataSource());
-		List<Skill> recommendation = recommender.recommendSkillsFor(1);
+		List<SkillFeedback> recommendation = recommender.recommendSkillsFor(1);
 		assertEquals(4, recommendation.size());
 	}
 }

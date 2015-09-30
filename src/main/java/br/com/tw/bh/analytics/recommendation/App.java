@@ -47,7 +47,7 @@ public class App {
 		get("/person/:id/recommendation", (req, res) -> {
 			int id = Integer.valueOf(req.params(":id"));
 
-			List<Skill> recommendedSkills = recommender.recommendSkillsFor(id);
+			List<SkillFeedback> recommendedSkills = recommender.recommendSkillsFor(id);
 			return gson.toJsonTree(recommendedSkills);
 		});
 

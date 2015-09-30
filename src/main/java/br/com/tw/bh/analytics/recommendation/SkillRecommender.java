@@ -35,28 +35,38 @@ public class SkillRecommender {
 				new GradeRecommender(people, ratings.filterByRole(role), skills)));
 	}
 
-	public List<Skill> recommendSkillsFor(int personId) throws TasteException {
+	public List<SkillFeedback> recommendSkillsFor(int personId) throws TasteException {
 		Person person = people.get(personId);
-		List<Skill> recommendations = load(personId);
+		List<SkillFeedback> recommendations = load(personId);
 		if (recommendations.isEmpty()) {
-			recommendations = similarityRecommendersByRole.get(person.getRole()).recommendSkillsFor(personId, 5);
-			recommendations.addAll(gradeRecommendersByRole.get(person.getRole()).recommendSkillsFor(personId, 3));
+			recommendations = toFeedback(
+					similarityRecommendersByRole.get(person.getRole()).recommendSkillsFor(personId, 5));
+			recommendations
+					.addAll(toFeedback(gradeRecommendersByRole.get(person.getRole()).recommendSkillsFor(personId, 3)));
 			save(personId, recommendations);
 		}
 		return recommendations;
 	}
 
-	private List<Skill> load(int personId) {
+	private List<SkillFeedback> toFeedback(List<Skill> skills) {
+		List<SkillFeedback> result = new ArrayList<>();
+		for (Skill skill : skills) {
+			result.add(new SkillFeedback(skill));
+		}
+		return result;
+	}
+
+	private List<SkillFeedback> load(int personId) {
 		try (Connection connection = connectionPool.getConnection()) {
-			PreparedStatement stmt = connection
-					.prepareStatement("SELECT skill_id, feedback FROM recommendation WHERE person_id = ? ORDER BY index_");
+			PreparedStatement stmt = connection.prepareStatement(
+					"SELECT skill_id, feedback FROM recommendation WHERE person_id = ? ORDER BY index_");
 			stmt.setInt(1, personId);
 			ResultSet rs = stmt.executeQuery();
 
-			List<Skill> recommendations = new ArrayList<>();
+			List<SkillFeedback> recommendations = new ArrayList<>();
 			while (rs.next()) {
 				long skillId = rs.getLong(1);
-				Skill skill = skills.get(skillId);
+				SkillFeedback skill = new SkillFeedback(skills.get(skillId));
 				String feedback = rs.getString(2);
 				if (feedback != null)
 					skill.setFeedback(Boolean.valueOf(feedback));
@@ -68,11 +78,11 @@ public class SkillRecommender {
 		}
 	}
 
-	private void save(int personId, List<Skill> recommendations) {
+	private void save(int personId, List<SkillFeedback> recommendations) {
 		try (Connection connection = connectionPool.getConnection()) {
 			for (int i = 0; i < recommendations.size(); i++) {
-				PreparedStatement stmt = connection
-						.prepareStatement("INSERT INTO recommendation (person_id, index_, skill_id, feedback) VALUES (?, ?, ?, null)");
+				PreparedStatement stmt = connection.prepareStatement(
+						"INSERT INTO recommendation (person_id, index_, skill_id, feedback) VALUES (?, ?, ?, null)");
 				stmt.setInt(1, personId);
 				stmt.setInt(2, i);
 				stmt.setLong(3, recommendations.get(i).getId());
